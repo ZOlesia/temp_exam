@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/logout">Logout</a>
+    <h1>Welcome {{ user.alias }}!</h1>
+    <div>
+        <h2>Quotable Quotes</h2>
+        {% for quote in all_quotes%}
+            <form action="/add/{{ quote.id }}" method="post">
+                {% csrf_token %}
+                <p>{{ quote.name }}: {{ quote.content }}</p>
+                <p>Posted by <a href="/users/{{ quote.uploader.id }}">{{ quote.uploader.alias }}</a></p>
+                <input type="submit" value="Add to My List">
+            </form>
+        {% endfor %}
+    </div>
+
+
+    <div>
+        <h2>Your Favorites</h2>
+        {% for quote in favorite%}
+            <form action="/remove" method="post">
+                {% csrf_token %}
+                <p>{{ quote.name }}: {{ quote.content }}</p>
+                <p>Posted by <a href="/users/{{ quote.uploader.id }}">{{ quote.uploader.alias }}</a></p>
+                <input type="submit" value="Remove from My List">
+            </form>
+        {% endfor %}
+    </div>
+
+    <div>
+        <p>Contribute a quote:</p>
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{message}}</p>
+            {% endfor %}
+        {% endif %}
+        <form action="/contribute" method="post">
+            {% csrf_token %}
+            Quoted By: <input type="text" name="by">
+            <br>
+            Message: <textarea name="msg"></textarea>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
